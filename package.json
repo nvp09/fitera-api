@@ -1,0 +1,17 @@
+{
+  "name": "fitera-api",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon app.mjs",
+    "start": "node app.mjs"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}
