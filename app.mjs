@@ -4,25 +4,24 @@ import cors from "cors";
 const app = express();
 const port = process.env.PORT || 4000;
 
-// middleware
 app.use(cors());
 app.use(express.json());
 
-// test route
+// ===== TEST ROOT =====
 app.get("/", (req, res) => {
   res.send("Hello TechUp!");
 });
 
-// ===== PROFILE API (ตามโจทย์) =====
-app.get("/profile", (req, res) => {
-  res.json({
+// ===== PROFILES API =====
+app.get("/profiles", (req, res) => {
+  res.status(200).json({
     data: {
       name: "john",
-      age: 20
-    }
+      age: 20,
+    },
   });
 });
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server is running at ${port}`);
 });
