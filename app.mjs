@@ -2,14 +2,24 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import pool from "./utils/db.mjs";
-import db from "./utils/db.mjs";
 
 
-const app = express();
-const port = process.env.PORT || 4000;
+const app = express(); // MIDDLEWARE
+const port = process.env.PORT || 4000; // PORT
 
-app.use(cors());
-app.use(express.json());
+app.use(express.json()); 
+
+app.use(
+    cors({
+      origin: [
+        "http://localhost:5173", // Frontend local (Vite)
+        "http://localhost:3000", // เผื่อ React แบบอื่น
+        "https://fitera.vercel.app", // ใส่ URL frontend ที่ deploy จริง
+      ],
+    })
+  );
+  
+
 
 // ===== TEST ROOT =====
 app.get("/", (req, res) => {
@@ -219,7 +229,7 @@ app.delete("/posts/:id", async (req, res) => {
   
     try {
       // ลบ post
-      const result = await db.query(
+      const result = await pool.query(
         "DELETE FROM posts WHERE id = $1 RETURNING *",
         [id]
       );
@@ -241,6 +251,14 @@ app.delete("/posts/:id", async (req, res) => {
         message: "Internal server error",
       });
     }
+  });
+  
+
+  // ===== HEALTH CHECK =====
+app.get("/health", (req, res) => {
+    res.status(200).json({
+      message: "OK",
+    });
   });
   
 
