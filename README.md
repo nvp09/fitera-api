@@ -1,19 +1,18 @@
 # Fitera API (Personal Blog Backend)
 
-Backend API สำหรับ Personal Blog Project  
-พัฒนาด้วย Express + PostgreSQL (Supabase)
+Backend API for Personal Blog Project  
+Built with Express + PostgreSQL (Supabase)
 
 ---
 
 ## 🚀 Live API (Deploy on Vercel)
 
 Base URL:
-`https://fitera-api.vercel.app`
-
+https://fitera-api.vercel.app
 
 
 Health Check:
-`https://fitera-api.vercel.app/health`
+https://fitera-api.vercel.app/health
 
 ---
 
@@ -29,12 +28,12 @@ Health Check:
 
 ## 🛠 Run Locally
 
-1.  Install dependencies
+1. Install dependencies:
 
     ```
 npm install
     ```
-2.  Start server
+2. Start server:
 
     ```
 npm run dev
@@ -69,7 +68,6 @@ DELETE /posts/:id
 CORS is configured to allow:
 - Local development
 - Production frontend (Vercel)
-
 
 ---
 
