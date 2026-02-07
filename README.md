@@ -49,6 +49,12 @@ GET /health
 ### 🔹 Get All Posts
 GET /posts
 
+Example (Production URL):
+
+```
+GET https://fitera-api.vercel.app/posts
+```
+
 ### 🔹 Get Single Post
 GET /posts/:id
 
@@ -79,3 +85,13 @@ Create a `.env` file:
 PORT=4000
 DATABASE_URL=your_supabase_connection_string
 ```
+
+---
+
+## 🔗 Related Project
+
+Frontend:
+https://fitera-app.vercel.app
+
+Frontend Repository:
+https://github.com/nvp09/fitera
