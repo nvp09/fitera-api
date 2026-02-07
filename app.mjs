@@ -14,7 +14,7 @@ app.use(
       origin: [
         "http://localhost:5173", // Frontend local (Vite)
         "http://localhost:3000", // เผื่อ React แบบอื่น
-        "https://fitera.vercel.app", // ใส่ URL frontend ที่ deploy จริง
+        "https://fitera-app.vercel.app", // ใส่ URL frontend ที่ deploy จริง
       ],
     })
   );
