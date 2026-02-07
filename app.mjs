@@ -21,11 +21,18 @@ app.use(
   
 
 
-// ===== TEST ROOT =====
+// ===== ROOT =====
 app.get("/", (req, res) => {
-  res.send("Hello TechUp!");
-});
-
+    res.json({
+      project: "Fitera Personal Blog API",
+      status: "running",
+      endpoints: {
+        health: "/health",
+        posts: "/posts",
+      },
+    });
+  });
+  
 // ===== DB TEST =====
 app.get("/db-test", async (req, res) => {
     try {
