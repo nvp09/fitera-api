@@ -30,14 +30,15 @@ https://fitera-api.vercel.app/health
 
 1. Install dependencies:
 
-    ```
+```
 npm install
-    ```
+```
+
 2. Start server:
 
-    ```
+```
 npm run dev
-    ```                   
+```                   
 
 ---
 
