@@ -49,10 +49,16 @@ app.get("/db-test", async (req, res) => {
     }
   });  
 
-// ===== GET ALL POSTS =====
+// ===== GET ALL POSTS (WITH PAGINATION + FILTER) =====
 app.get("/posts", async (req, res) => {
     try {
-      const query = `
+      const { page = 1, limit = 6, category, keyword } = req.query;
+  
+      const pageNumber = parseInt(page);
+      const pageSize = parseInt(limit);
+      const offset = (pageNumber - 1) * pageSize;
+  
+      let query = `
         SELECT
           posts.id,
           posts.image,
@@ -65,14 +71,53 @@ app.get("/posts", async (req, res) => {
         FROM posts
         LEFT JOIN categories ON posts.category_id = categories.id
         LEFT JOIN statuses ON posts.status_id = statuses.id
-        ORDER BY posts.date DESC;
       `;
   
-      const result = await pool.query(query);
+      let countQuery = `
+        SELECT COUNT(*) FROM posts
+        LEFT JOIN categories ON posts.category_id = categories.id
+        LEFT JOIN statuses ON posts.status_id = statuses.id
+      `;
+  
+      let conditions = [];
+      let values = [];
+      let valueIndex = 1;
+  
+      // filter by category
+      if (category) {
+        conditions.push(`categories.name ILIKE $${valueIndex}`);
+        values.push(`%${category}%`);
+        valueIndex++;
+      }
+  
+      // filter by keyword (title or description)
+      if (keyword) {
+        conditions.push(`(posts.title ILIKE $${valueIndex} OR posts.description ILIKE $${valueIndex})`);
+        values.push(`%${keyword}%`);
+        valueIndex++;
+      }
+  
+      if (conditions.length > 0) {
+        query += ` WHERE ` + conditions.join(" AND ");
+        countQuery += ` WHERE ` + conditions.join(" AND ");
+      }
+  
+      query += ` ORDER BY posts.date DESC LIMIT $${valueIndex} OFFSET $${valueIndex + 1}`;
+      values.push(pageSize, offset);
+  
+      const result = await pool.query(query, values);
+      const countResult = await pool.query(countQuery, values.slice(0, values.length - 2));
+  
+      const totalPosts = parseInt(countResult.rows[0].count);
+      const totalPages = Math.ceil(totalPosts / pageSize);
   
       res.status(200).json({
+        totalPosts,
+        totalPages,
+        currentPage: pageNumber,
         data: result.rows,
       });
+  
     } catch (error) {
       console.error(error);
       res.status(500).json({
@@ -80,6 +125,7 @@ app.get("/posts", async (req, res) => {
       });
     }
   });
+  
 
   // ===== GET SINGLE POST =====
 app.get("/posts/:id", async (req, res) => {
