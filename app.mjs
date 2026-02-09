@@ -127,7 +127,7 @@ app.get("/posts", async (req, res) => {
   });
   
 
-  // ===== GET SINGLE POST =====
+// ===== GET SINGLE POST =====
 app.get("/posts/:id", async (req, res) => {
     try {
       const { id } = req.params;
@@ -181,14 +181,51 @@ app.post("/posts", async (req, res) => {
         content,
         status_id,
       } = req.body;
-  
-      // basic validation
-      if (!image || !title || !content) {
-        return res.status(400).json({
-          message: "Missing required fields",
-        });
+
+      // ===== VALIDATION =====
+
+      if (title === undefined) {
+        return res.status(400).json({ message: "Title is required" });
       }
-  
+      if (typeof title !== "string") {
+        return res.status(400).json({ message: "Title must be a string" });
+      }
+
+      if (image === undefined) {
+        return res.status(400).json({ message: "Image is required" });
+      }
+      if (typeof image !== "string") {
+        return res.status(400).json({ message: "Image must be a string" });
+      }
+
+      if (category_id === undefined) {
+        return res.status(400).json({ message: "Category_id is required" });
+      }
+      if (typeof category_id !== "number") {
+        return res.status(400).json({ message: "Category_id must be a number" });
+      }
+
+      if (description === undefined) {
+        return res.status(400).json({ message: "Description is required" });
+      }
+      if (typeof description !== "string") {
+        return res.status(400).json({ message: "Description must be a string" });
+      }
+
+      if (content === undefined) {
+        return res.status(400).json({ message: "Content is required" });
+      }
+      if (typeof content !== "string") {
+        return res.status(400).json({ message: "Content must be a string" });
+      }
+
+      if (status_id === undefined) {
+        return res.status(400).json({ message: "Status_id is required" });
+      }
+      if (typeof status_id !== "number") {
+        return res.status(400).json({ message: "Status_id must be a number" });
+      }
+
       const query = `
         INSERT INTO posts
           (image, category_id, title, description, content, status_id)
@@ -215,12 +252,13 @@ app.post("/posts", async (req, res) => {
     } catch (error) {
       console.error(error);
       res.status(500).json({
-        message: "Server could not create post because database connection",
+        message: "Server error",
       });
     }
   });  
   
-  app.put("/posts/:id", async (req, res) => {
+  
+app.put("/posts/:id", async (req, res) => {
     const { id } = req.params;
     const {
       image,
@@ -231,15 +269,51 @@ app.post("/posts", async (req, res) => {
       status_id,
     } = req.body;
   
-    // check missing data
-    if (!image || !category_id || !title || !content || !status_id) {
-      return res.status(400).json({
-        message: "Missing required fields",
-      });
+    // ===== VALIDATION =====
+
+    if (title === undefined) {
+      return res.status(400).json({ message: "Title is required" });
+    }
+    if (typeof title !== "string") {
+      return res.status(400).json({ message: "Title must be a string" });
+    }
+
+    if (image === undefined) {
+      return res.status(400).json({ message: "Image is required" });
+    }
+    if (typeof image !== "string") {
+      return res.status(400).json({ message: "Image must be a string" });
+    }
+
+    if (category_id === undefined) {
+      return res.status(400).json({ message: "Category_id is required" });
+    }
+    if (typeof category_id !== "number") {
+      return res.status(400).json({ message: "Category_id must be a number" });
+    }
+
+    if (description === undefined) {
+      return res.status(400).json({ message: "Description is required" });
+    }
+    if (typeof description !== "string") {
+      return res.status(400).json({ message: "Description must be a string" });
+    }
+
+    if (content === undefined) {
+      return res.status(400).json({ message: "Content is required" });
+    }
+    if (typeof content !== "string") {
+      return res.status(400).json({ message: "Content must be a string" });
+    }
+
+    if (status_id === undefined) {
+      return res.status(400).json({ message: "Status_id is required" });
+    }
+    if (typeof status_id !== "number") {
+      return res.status(400).json({ message: "Status_id must be a number" });
     }
   
     try {
-      //  update post
       const result = await pool.query(
         `
         UPDATE posts
@@ -256,14 +330,12 @@ app.post("/posts", async (req, res) => {
         [image, category_id, title, description, content, status_id, id]
       );
   
-      //  not found
       if (result.rowCount === 0) {
         return res.status(404).json({
           message: "Post not found",
         });
       }
   
-      //  success
       res.status(200).json({
         message: "Post updated successfully",
         data: result.rows[0],
@@ -276,18 +348,17 @@ app.post("/posts", async (req, res) => {
     }
   });
   
-  // ===== DELETE post =====
+  
+// ===== DELETE post =====
 app.delete("/posts/:id", async (req, res) => {
     const { id } = req.params;
   
     try {
-      // ลบ post
       const result = await pool.query(
         "DELETE FROM posts WHERE id = $1 RETURNING *",
         [id]
       );
   
-      // ถ้าไม่เจอ post
       if (result.rowCount === 0) {
         return res.status(404).json({
           message: "Post not found",
@@ -307,7 +378,7 @@ app.delete("/posts/:id", async (req, res) => {
   });
   
 
-  // ===== HEALTH CHECK =====
+// ===== HEALTH CHECK =====
 app.get("/health", (req, res) => {
     res.status(200).json({
       message: "OK",
