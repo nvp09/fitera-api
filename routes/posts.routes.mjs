@@ -1,5 +1,8 @@
 import express from "express";
 import pool from "../utils/db.mjs";
+import protectUser from "../middlewares/protectUser.mjs";
+import protectAdmin from "../middlewares/protectAdmin.mjs";
+
 
 const router = express.Router();
 
@@ -129,8 +132,8 @@ router.get("/:id", async (req, res) => {
 
 
 // ===== CREATE POST =====
-router.post("/", async (req, res) => {
-  try {
+router.post("/", protectUser, async (req, res) => {
+    try {
     const { title, image, category_id, description, content, status_id } =
       req.body;
 
@@ -205,8 +208,8 @@ router.post("/", async (req, res) => {
 
 
 // ===== UPDATE POST =====
-router.put("/:id", async (req, res) => {
-  const { id } = req.params;
+router.put("/:id", protectUser, async (req, res) => {
+    const { id } = req.params;
   const { title, image, category_id, description, content, status_id } =
     req.body;
 
@@ -290,8 +293,8 @@ router.put("/:id", async (req, res) => {
 
 
 // ===== DELETE POST =====
-router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
+router.delete("/:id", protectAdmin, async (req, res) => {
+    const { id } = req.params;
 
   try {
     const result = await pool.query(
